@@ -1,0 +1,41 @@
+// Toledo InsideBar
+// Pinta a barra que é inside bar para alertar e depois quando ativar compra
+// ou venda pinta a barra par auxiliar na operação podendo ser um scalp ou
+// buscar 1:1, ideal ter uma média rápida para operar a favor quando o preço
+// estiver próximo ou contra quando o preço estiver bem distante.
+input
+Activate(5); // pontos para ativar
+EMAValue(10); // periodo da media exponencial 
+
+var
+clCompra : Integer;
+clVenda : Integer;
+clInside : Integer;
+MME : Float;
+
+begin
+  clCompra := RGB(0, 152, 56);
+  clVenda := RGB(255, 29, 25);
+  clInside := RGB(255,165,0);
+  MME := MediaExp(EMAValue, Close);
+
+  if (HIGH < HIGH[1])
+  and (LOW > LOW[1]) Then
+    PaintBar (clInside);
+
+
+// Gatilho de Compra
+  if (HIGH[1] < HIGH[2]) 
+  and (LOW[1] > LOW[2]) 
+  and (HIGH > HIGH[1]+Activate)
+  and (CLOSE[1] > MME) then
+    PaintBar(clCompra);
+
+// Gatilho de Venda
+  if (HIGH[1] < HIGH[2]) 
+  and (LOW[1] > LOW[2]) 
+  and (LOW < LOW[1]-Activate)
+  and (CLOSE[1] < MME) then
+    PaintBar(clVenda);
+
+end;

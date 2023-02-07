@@ -1,0 +1,44 @@
+// Toledo BOT 01
+// Primeira tentativa de robô de operações
+// Não rolou kkkk
+input
+  elPeriod(8);
+  elMin(20);
+  elMax(80);
+begin
+  if (Time > 1045) and (Time < 1600) then
+    begin
+      if (SlowStochastic(elPeriod) <= elMin) then
+        begin
+          if (IsSold) then
+            begin
+              //ReversePosition;
+              BuyToCoverAtMarket;
+              PaintBar(clFuchsia);
+            end;
+          if (Close > Highest(High,1)[1]) and (BuyPosition = 0) then
+            begin
+              BuyAtMarket;
+              PaintBar(clGreen);
+            end;
+        end;
+      if (SlowStochastic(elPeriod) >= elMax) then
+        begin
+          if (IsBought) then
+            begin
+              //ReversePosition;
+              SellToCoverAtMarket;
+              PaintBar(clFuchsia);
+            end;
+          if (Close < Lowest(Low,1)[1]) and (SellPosition = 0) then
+            begin
+              SellShortAtMarket;
+              PaintBar(clRed);
+            end;
+        end;
+    end;
+//  if (Time >= 1720) then
+//    begin
+//      ClosePosition;
+//    end;
+end;
