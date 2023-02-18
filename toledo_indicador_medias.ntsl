@@ -1,0 +1,30 @@
+// Toledo Medias
+// Facilidade em usar 2 médias exponenciais para 2 periodicidades.
+// Exemplo usar médias de 10 e 100 para 10m e 20 e 200 para os 5m.
+// Assim mudando a periodicidade, aplica as medias corretas. 
+
+input
+  Periodo1(5);
+  MediaCurta1(20);
+  MediaLonga1(200);
+  Periodo2(10);
+  MediaCurta2(10);
+  MediaLonga2(100);
+begin
+  if (GraphicOffset = Periodo1) then
+    begin
+      Plot(MediaExp(MediaCurta1,close));
+      Plot2(MediaExp(MediaLonga1,close));
+      SetPlotColor(1, RGB(25, 100, 210));
+      SetPlotColor(2, RGB(205, 35, 5));
+      SetPlotWidth(2, 2);
+    end;
+  if (GraphicOffset = Periodo2) then
+    begin
+      Plot(MediaExp(MediaCurta2,close));
+      Plot2(MediaExp(MediaLonga2,close));
+      SetPlotColor(1, RGB(205, 35, 5));
+      SetPlotColor(2, RGB(170, 175, 180));
+      SetPlotWidth(2, 2);
+    end;
+end;
