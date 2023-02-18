@@ -8,6 +8,8 @@
 // 3 - Mínima
 // 4 - Ajuste
 // Dias: Número de dias para plotar o indicado sendo 1 hoje, 2 até ontem, 3 até dois dias atrás.
+// Créditos: Agradecimentos ao Fabio Fares pelo insight sobre a variação do Ajuste, e ao
+// Diogo Prestes por ter uma comunidade exclusiva onde temos muitas trocas valiosas.
 
 input
   Base(4);
