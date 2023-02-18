@@ -1,41 +1,46 @@
 // Toledo Pontos
 // Pontos de suporte e resistência baseado na variação percentual do ajuste ou fechamento, etc.
 // Você pode por exemplo combinar o Ajuste com Fechamento tendo uma região.
-// Dado: Determina o dado que será obtido:
+// Base: Determina o dado que será obtido:
 // 0 - Fechamento
 // 1 - Abertura
 // 2 - Máxima
 // 3 - Mínima
 // 4 - Ajuste
+// Dias: Número de dias para plotar o indicado sendo 1 hoje, 2 até ontem, 3 até dois dias atrás.
 
 input
   Base(4);
+  Dias(3);
 var
   nIndex: Integer;
 begin
-  Plot(PriorCote(Base));
-  SetPlotColor(1, RGB(248, 180, 20));
-  SetPlotStyle(1, 2);
-  Plot7(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 0.5 / 100)));
-  Plot6(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 1 / 100)));
-  Plot5(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 1.5 / 100)));
-  Plot4(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 2 / 100)));
-  Plot3(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 2.5 / 100)));
-  Plot2(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 3 / 100)));
-  Plot8(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 0.5 / 100)));
-  Plot9(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 1 / 100)));
-  Plot10(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 1.5 / 100)));
-  Plot11(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 2 / 100)));
-  Plot12(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 2.5 / 100)));
-  Plot13(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 3 / 100)));
-  for nIndex := 2 to 7 do
-    begin
-      SetPlotColor(nIndex, RGB(23, 98, 210));
-      SetPlotStyle(nIndex, 2);
-    end;
-  for nIndex := 8 to 13 do
-    begin
-      SetPlotColor(nIndex, RGB(204, 37, 7));
-      SetPlotStyle(nIndex, 2);
-    end;
+  if CalcDate(CurrentDate, -Dias) < Date then
+  begin
+    Plot(PriorCote(Base));
+    SetPlotColor(1, RGB(248, 180, 20));
+    SetPlotStyle(1, 0);
+    Plot7(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 0.5 / 100)));
+    Plot6(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 1 / 100)));
+    Plot5(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 1.5 / 100)));
+    Plot4(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 2 / 100)));
+    Plot3(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 2.5 / 100)));
+    Plot2(Round2Fraction(PriorCote(Base) + (PriorCote(Base) * 3 / 100)));
+    Plot8(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 0.5 / 100)));
+    Plot9(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 1 / 100)));
+    Plot10(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 1.5 / 100)));
+    Plot11(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 2 / 100)));
+    Plot12(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 2.5 / 100)));
+    Plot13(Round2Fraction(PriorCote(Base) - (PriorCote(Base) * 3 / 100)));
+    for nIndex := 2 to 7 do
+      begin
+        SetPlotColor(nIndex, RGB(23, 98, 210));
+        SetPlotStyle(nIndex, 0);
+      end;
+    for nIndex := 8 to 13 do
+      begin
+        SetPlotColor(nIndex, RGB(204, 37, 7));
+        SetPlotStyle(nIndex, 0);
+      end;
+  end;
 end;
