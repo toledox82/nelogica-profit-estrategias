@@ -1,30 +1,36 @@
 // Toledo Medias
-// Facilidade em usar 2 médias exponenciais para 2 periodicidades.
+// Facilidade em usar médias exponenciais 1 período específico e outras médias para demais períodos.
 // Exemplo usar médias de 10 e 100 para 10m e 20 e 200 para os 5m.
 // Assim mudando a periodicidade, aplica as medias corretas. 
 
 input
-  Periodo1(5);
-  MediaCurta1(20);
-  MediaLonga1(200);
-  Periodo2(10);
-  MediaCurta2(10);
-  MediaLonga2(100);
+  Periodo(10);
+  MediaCurta(10);
+  MediaLonga(100); 
+  MediaCurtaGenerica(9);
+  MediaCurta2Generica(20);
+  MediaLongaGenerica(50);
+  MediaLonga2Generica(200);
 begin
-  if (GraphicOffset = Periodo1) then
+  if (GraphicOffset = Periodo) then
     begin
-      Plot(MediaExp(MediaCurta1,close));
-      Plot2(MediaExp(MediaLonga1,close));
-      SetPlotColor(1, RGB(25, 100, 210));
-      SetPlotColor(2, RGB(205, 35, 5));
-      SetPlotWidth(2, 2);
-    end;
-  if (GraphicOffset = Periodo2) then
-    begin
-      Plot(MediaExp(MediaCurta2,close));
-      Plot2(MediaExp(MediaLonga2,close));
+      Plot(MediaExp(MediaCurta,close));
+      Plot2(MediaExp(MediaLonga,close));
       SetPlotColor(1, RGB(205, 35, 5));
-      SetPlotColor(2, RGB(170, 175, 180));
+      SetPlotColor(2, RGB(170, 175, 180)); 
       SetPlotWidth(2, 2);
     end;
+  if (GraphicOffset <> Periodo) then
+    begin
+      Plot(MediaExp(MediaCurtaGenerica,close));
+      Plot2(MediaExp(MediaCurta2Generica,close));
+      Plot3(MediaExp(MediaLongaGenerica,close));
+      Plot4(MediaExp(MediaLonga2Generica,close));
+      SetPlotColor(1, RGB(255, 0, 255));
+      SetPlotColor(2, RGB(25, 100, 210));
+      SetPlotColor(3, RGB(248, 180, 20));
+      SetPlotColor(4, RGB(205, 35, 5));
+      SetPlotWidth(3, 2);
+      SetPlotWidth(4, 2);
+    end; 
 end;
