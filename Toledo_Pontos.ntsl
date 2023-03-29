@@ -1,59 +1,86 @@
 {
-// Toledo Pontos
-Pontos de suporte e resistência baseado na variação percentual do ajuste ou fechamento, etc.
-Você pode por exemplo combinar o Ajuste com Fechamento tendo uma região.
+Toledo Pontos
+Indicador para calcular a variações derivadas de algum ponto importante como Fechamento,
+Ajuste ou até mesmo um preço específico. São pontos onde o mercado tende a brigar,
+podendo ser usado como alvo, ou ponto de scalp.
 
-// Base: Determina o dado que será obtido:
-0 - Fechamento
-1 - Abertura
-2 - Máxima
-3 - Mínima
-4 - Ajuste
+Base: Determina o dado que será obtido.
 
-// Variacao: Variação percentual que deseja derivar
+0 = Fechamento
+1 = Abertura
+2 = Máxima
+3 = Mínima
+4 = Ajuste
 
-// Niveis: Quantidade de níveis que deseja derivar
+Variacao: Variação percentual que deseja derivar
 
-// Pregoes: Quantidade de dias que deseja plotar os níveis
+Niveis: Quantidade de níveis que deseja derivar
 
-// BaseAlternativa:
+Pregoes: Quantidade de dias que deseja plotar os níveis
+
+Separar:
+Não = Plota movimentação das linhas de um dia para o outro
+Sim = Separa os dias e deixa o indicador mais limpo
+
+Backtest:
+Não = Usar no dia a dia
+Sim = Usar em Backtest e replay, mas lembre de desligar o Exibir > Splits e Grupamentos (CTRL+K)
+
+OHLC:
+Não = Não plota linhas
+Sim = Plota as linhas de Abertura, Máxima, Mínima e Fechamento
+
+BaseAlternativa:
 Não = Usar valores padrão da Base
 Sim = Usar valor de nivel de preço desejado
 
-// Créditos: Agradecimentos ao Fabio Fares pelo insight sobre a variação do Ajuste, e ao
-Diogo Prestes por ter uma comunidade exclusiva onde temos muitas trocas valiosas.
+Você também pode usar 2 indicadores combinados para ter uma região por exemplo usar um com fechamento e outro com ajuste assim vai aumentar o range do possível suporte ou resistência dinâmico.
+
+Dica de Ouro: Atualmente eu utilizo como regiões para auxiliar o contexto da movimentação do preço, conseguindo operar entre os ranges ou alongando alvos.
+
+Créditos: Agradecimentos ao Fabio Fares pelos insights na construção desse indicador, e ao Diogo Prestes por ter uma comunidade exclusiva onde temos muitas trocas valiosas.
 }
 input
   Base(4);
   Variacao(0.5);
   Niveis(6);
-  Pregoes(2);
+  Pregoes(3);
+  Separar(TRUE);
+  Backtest(FALSE);
+  OHLC(FALSE);
   BaseAlternativa(FALSE);
 var
-  i : Integer;
+  i     : Integer;
+  linha : integer;
 begin
-  if Date >= CalcDate(CurrentDate, - Pregoes) then
+  if (( not Backtest) and (Date >= CalcDate(CurrentDate, - Pregoes))) or Backtest then
     begin
       if BaseAlternativa = FALSE then
         begin
           PlotN(Niveis * 2 + 1,PriorCote(Base));
           SetPlotColor(Niveis * 2 + 1,RGB(255,0,255));
           SetPlotStyle(Niveis * 2 + 1,0);
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(Niveis * 2 + 1);
           for i := 1 to Niveis do
             begin
               PlotN(i,Round2Fraction(PriorCote(Base) + (PriorCote(Base) * (Variacao * i) / 100)));
               SetPlotColor(i,RGB(0,188,212));
               SetPlotStyle(i,0);
-              if MOD( i, 2) = 0 then
-                SetPlotWidth(i,2); 
+              if MOD(i,2) = 0 then
+                SetPlotWidth(i,2);
+              if ((Date <> Date[1]) and Separar) then
+                noPlot(i);
             end;
           for i := 1 to Niveis do
             begin
               PlotN(Niveis + i,Round2Fraction(PriorCote(Base) - (PriorCote(Base) * (Variacao * i) / 100)));
               SetPlotColor(Niveis + i,RGB(0,188,212));
               SetPlotStyle(Niveis + i,0);
-              if MOD( i, 2) = 0 then
-                SetPlotWidth(Niveis + i,2); 
+              if MOD(i,2) = 0 then
+                SetPlotWidth(Niveis + i,2);
+              if ((Date <> Date[1]) and Separar) then
+                noPlot(Niveis + i);
             end;
         end;
       if BaseAlternativa = TRUE then
@@ -74,5 +101,33 @@ begin
               SetPlotStyle(Niveis + i,0);
             end;
         end;
+      if OHLC then
+        begin
+          //Abertura
+          linha := Niveis * 2 + 2;
+          PlotN(linha,PriorCote(1));
+          SetPlotColor(linha,RGB(255,173,50));
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //Máxima
+          linha := Niveis * 2 + 3;
+          PlotN(linha,PriorCote(2));
+          SetPlotColor(linha,RGB(255,63,63));
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //Mínima
+          linha := Niveis * 2 + 4;
+          PlotN(linha,PriorCote(3));
+          SetPlotColor(linha,RGB(42,127,255));
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //Fechamento
+          linha := Niveis * 2 + 5;
+          PlotN(linha,PriorCote(0));
+          SetPlotColor(linha,RGB(54,68,87));
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+        end;
     end;
+  end;
 end;

@@ -1,0 +1,48 @@
+{
+Toledo Ticks
+Indicador para calcular a volatilidade das últimas barras em ticks,
+evite violinadas e aproveite mais os scalps, preparado para Índice, Dólar e Ações,
+agilidade para você configurar as ordens oco na boleta usando a opção personalizada.
+
+Você ponde alterar o período e o tipo de média para usar.
+
+Período: Informa o número de barras que deseja usar.
+
+Exponencial: 
+Sim = Usa média exponecial dando peso maior para as barras mais recentes.
+Não = Usa média aritimética.
+
+Dica de Ouro: Usar esse indicador junto com o Toledo Pontos para obter mais oportunidades de scalp.
+}
+input
+  Periodo(3);
+  Exponencial(True);
+var
+  amplitude : float;
+begin
+  amplitude := High - Low;
+  if GetAsset = "WDOFUT" then
+    begin
+      if (Exponencial = True) then
+        Plot(Round(MediaExp(Periodo,amplitude) * 2))
+      else if (Exponencial = False) then
+        Plot(Round(Media(Periodo,amplitude) * 2));
+    end;
+  if GetAsset = "WINFUT" then
+    begin
+      if (Exponencial = True) then
+        Plot(Round(MediaExp(Periodo,amplitude) / 5))
+      else if (Exponencial = False) then
+        Plot(Round(Media(Periodo,amplitude) / 5)); 
+    end;
+  if IsBMF = FALSE then
+    begin
+      if (Exponencial = True) then
+        Plot(Round(MediaExp(Periodo,amplitude)))
+      else if (Exponencial = False) then
+        Plot(Round(Media(Periodo,amplitude))); 
+    end;
+
+  SetPlotType(1,1);
+  SetPlotColor(1,clSkyBlue);
+end;
