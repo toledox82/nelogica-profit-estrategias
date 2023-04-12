@@ -34,6 +34,10 @@ BaseAlternativa:
 Não = Usar valores padrão da Base
 Sim = Usar valor de nivel de preço desejado
 
+Rotulo:
+Não = Não mostra o rótulo da base usada
+Sim = Mostra o rótulo da base usada
+
 Você também pode usar 2 indicadores combinados para ter uma região por exemplo usar um com fechamento e outro com ajuste assim vai aumentar o range do possível suporte ou resistência dinâmico.
 
 Dica de Ouro: Atualmente eu utilizo como regiões para auxiliar o contexto da movimentação do preço, conseguindo operar entre os ranges ou alongando alvos.
@@ -44,14 +48,16 @@ input
   Base(4);
   Variacao(0.5);
   Niveis(6);
-  Pregoes(3);
+  Pregoes(5);
   Separar(TRUE);
   Backtest(FALSE);
   OHLC(FALSE);
   BaseAlternativa(FALSE);
+  Rotulo(TRUE);
 var
-  i     : Integer;
-  linha : integer;
+  i        : integer;
+  linha    : integer;
+  label    : string;
 begin
   if (( not Backtest) and (Date >= CalcDate(CurrentDate, - Pregoes))) or Backtest then
     begin
@@ -62,6 +68,20 @@ begin
           SetPlotStyle(Niveis * 2 + 1,0);
           if ((Date <> Date[1]) and Separar) then
             noPlot(Niveis * 2 + 1);
+          if (LastBarOnChart) and (Rotulo) then
+            begin
+              if (Base = 4) then
+                label := "Ajuste";
+              if (Base = 0) then
+                label := "Fechamento";
+              if (Base = 1) then
+                label := "Abertura";
+              if (Base = 2) then
+                label := "Máxima";
+              if (Base = 3) then
+                label := "Mínima";
+              PlotText(label,RGB(255,0,255),3,7,PriorCote(Base));
+            end;
           for i := 1 to Niveis do
             begin
               PlotN(i,Round2Fraction(PriorCote(Base) + (PriorCote(Base) * (Variacao * i) / 100)));
@@ -88,6 +108,8 @@ begin
           PlotN(Niveis * 2 + 1,Base);
           SetPlotColor(Niveis * 2 + 1,RGB(255,0,255));
           SetPlotStyle(Niveis * 2 + 1,0);
+          if (LastBarOnChart) and (Rotulo) then
+            PlotText("Base",RGB(255,0,255),3,7,Base);
           for i := 1 to Niveis do
             begin
               PlotN(i,Round2Fraction(Base + (Base * (Variacao * i) / 100)));
@@ -129,5 +151,4 @@ begin
             noPlot(linha);
         end;
     end;
-  end;
 end;
