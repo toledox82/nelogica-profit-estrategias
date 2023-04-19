@@ -27,15 +27,16 @@ Não = Usar no dia a dia
 Sim = Usar em Backtest e replay, mas lembre de desligar o Exibir > Splits e Grupamentos (CTRL+K)
 
 OHLC:
-Não = Não plota linhas
-Sim = Plota as linhas de Abertura, Máxima, Mínima e Fechamento
+Sim = Plota as linhas de Abertura, Máxima, Mínima e Fechamento.
+
+vFechamento:
+Sim = Plota variação +1%,+2%, -1% e -2% do Fechamento.
 
 BaseAlternativa:
 Não = Usar valores padrão da Base
 Sim = Usar valor de nivel de preço desejado
 
 Rotulo:
-Não = Não mostra o rótulo da base usada
 Sim = Mostra o rótulo da base usada
 
 Você também pode usar 2 indicadores combinados para ter uma região por exemplo usar um com fechamento e outro com ajuste assim vai aumentar o range do possível suporte ou resistência dinâmico.
@@ -52,12 +53,13 @@ input
   Separar(TRUE);
   Backtest(FALSE);
   OHLC(FALSE);
+  vFechamento(FALSE);
   BaseAlternativa(FALSE);
   Rotulo(TRUE);
 var
-  i        : integer;
-  linha    : integer;
-  label    : string;
+  i     : integer;
+  linha : integer;
+  label : string;
 begin
   if (( not Backtest) and (Date >= CalcDate(CurrentDate, - Pregoes))) or Backtest then
     begin
@@ -147,6 +149,37 @@ begin
           linha := Niveis * 2 + 5;
           PlotN(linha,PriorCote(0));
           SetPlotColor(linha,RGB(54,68,87));
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+        end;
+        if vFechamento then
+        begin
+          //+1%
+          linha := Niveis * 2 + 6;
+          PlotN(linha,(PriorCote(0) + ((PriorCote(0) * 1) / 100 )));
+          SetPlotColor(linha,RGB(45, 179, 111));
+          SetPlotWidth(linha,2);
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //+2%
+          linha := Niveis * 2 + 7;
+          PlotN(linha,(PriorCote(0) + ((PriorCote(0) * 2) / 100 )));
+          SetPlotColor(linha,RGB(45, 179, 111));
+          SetPlotWidth(linha,2);
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //-1%
+          linha := Niveis * 2 + 8;
+          PlotN(linha,(PriorCote(0) - ((PriorCote(0) * 1) / 100 )));
+          SetPlotColor(linha,RGB(45, 179, 111));
+          SetPlotWidth(linha,2);
+          if ((Date <> Date[1]) and Separar) then
+            noPlot(linha);
+          //-2%
+          linha := Niveis * 2 + 9;
+          PlotN(linha,(PriorCote(0) - ((PriorCote(0) * 2) / 100 )));
+          SetPlotColor(linha,RGB(45, 179, 111));
+          SetPlotWidth(linha,2);
           if ((Date <> Date[1]) and Separar) then
             noPlot(linha);
         end;
