@@ -38,9 +38,9 @@ begin
   if IsBMF = FALSE then
     begin
       if (Exponencial = True) then
-        Plot(Round(MediaExp(Periodo,amplitude)))
+        Plot(Round(MediaExp(Periodo,amplitude) / MinPriceIncrement))
       else if (Exponencial = False) then
-        Plot(Round(Media(Periodo,amplitude))); 
+        Plot(Round(Media(Periodo,amplitude) / MinPriceIncrement)); 
     end;
 
   SetPlotType(1,1);
